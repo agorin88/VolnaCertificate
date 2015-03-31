@@ -1,21 +1,5 @@
 <?php
-//Get page number from Ajax
-if(isset($_POST["page"])){
-    $page_number = filter_var($_POST["page"], FILTER_SANITIZE_NUMBER_INT, FILTER_FLAG_STRIP_HIGH); //filter number
-    if(!is_numeric($page_number)){die('Invalid page number!');} //incase of invalid page number
-}else{
-    $page_number = 1; //if there's no page number, set it to 1
-}
-
-//get total number of records from database
-$results = mysql_query("SELECT COUNT(*) FROM cert.certificate");
-$get_total_rows = mysql_fetch_row($results); //hold total records in variable
-//break records into pages
-$total_pages = ceil($get_total_rows[0]/$item_per_page);
-
-//fetch position of record
-$page_position = (($page_number-1) * $item_per_page);
-
+$db = new SafeMySQL();
 //Запрос к БД для основной таблицы сертификатов.
 $query ="SELECT
 `certificate`.`id` ,
@@ -34,8 +18,8 @@ WHERE cat.id =  '".$_GET['catid']."'
 ORDER BY  `certificate`.`id` ASC
 LIMIT $page_position, $item_per_page";
 
-$result = mysql_query("$query");
-$count = mysql_num_rows($result);
+//$result = mysql_query("$query");
+//$count = mysql_num_rows($result);
 
 //Запрос просроченных сертификатов
 $o_date = date('Y\-m\-d');
@@ -56,13 +40,11 @@ LIMIT $page_position, $item_per_page";
 $outdate = mysql_query("$out_query");
 
 //Запрос к таблице категорий.
-$catquery = "SELECT * FROM cat";
-$result_cat = mysql_query("$catquery");
-$result_cat2 = mysql_query("$catquery");
-
+$catquery = "SELECT * FROM ?n";
+$result_cat = $db->getAll($catquery, $cat);
+//$result_cat2 = $db->getAll($catquery, $cat);
 //Запрос к таблице производителей
-$manquery = "SELECT * FROM man";
-$result_man = mysql_query("$manquery");
+$result_man = $db->getAll($catquery, $man);
 
 
 //Добавление сертификата
@@ -153,7 +135,7 @@ function del_man() {
     }
 }
 
-function del_row() {
+/*function del_row() {
     if (isset($_POST['del_row'])) {
         $del_row = $_POST['del_row_id'];
         if (!mysql_query("DELETE FROM certificate WHERE id = $del_row"))
@@ -165,5 +147,5 @@ function del_row() {
                     </div>";
         }
     }
-}
+}*/
 ?>

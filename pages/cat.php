@@ -1,9 +1,6 @@
 <?php
 $db = new safeMysql();
-
-$per_page = 10;
 $catid = $_GET['catid'];
-
 //получаем номер страницы и значение для лимита
 $cur_page = 1;
 if (isset($_GET['pg']) && $_GET['pg'] > 0)
@@ -11,7 +8,6 @@ if (isset($_GET['pg']) && $_GET['pg'] > 0)
     $cur_page = $_GET['pg'];
 }
 $start = ($cur_page - 1) * $per_page;
-
 //выполняем запрос и получаем данные для вывода
 $sql  = "SELECT SQL_CALC_FOUND_ROWS
         certificate.id ,
@@ -37,7 +33,7 @@ $num_pages = ceil($rows / $per_page);
 // зададим переменную, которую будем использовать для вывода номеров страниц
 $pg = 0;
 
-$catname = $db->getOne("SELECT name FROM cat WHERE id=$catid")
+$catname = $db->getOne("SELECT name FROM ?n WHERE id=?i", $cat, $catid);
 //а дальше выводим в шаблоне данные и навигацию:
 ?>
 
@@ -98,7 +94,7 @@ $catname = $db->getOne("SELECT name FROM cat WHERE id=$catid")
 <div class="col-sm-10 center-block fnone" >
     <form>
         <div id="searchresults" class="fnone">Результаты для <span class="word"></span></div>
-        <h1 id="table-header">Сертификаты категории "<?=$catname?>"</h1>
+        <h1 id="table-header">Сертификаты категории "<span class="cat_id" id="<?=$catid?>"><?=$catname?>"</h1>
         <table class="table table-hover table-bordered main-table">
             <thead>
             <tr>
@@ -131,12 +127,9 @@ $catname = $db->getOne("SELECT name FROM cat WHERE id=$catid")
                 else
                     $link = "<td><a href=\"" . $row{'link'} . "\" target=\"_blank\"><i class=\"fa fa-file\"></i> Посмотреть сертификат</a></td>";
                 echo "
-                      <tr>
+                      <tr id='row-".$row{'id'}."'>
                             <td>
-                                <form method='post'>
-                                    <input type=\"hidden\" name=\"del_row_id\" value=\"".$row{'id'}." \"/>
-                                    <button type=\"submit\" name=\"del_row\" class='btn btn-round2 btn-sm btn-danger' title=\"удалить запись № ".$row{'id'}."\">&times;</button>
-                                </form>
+                                <div class='row-delete' id=\"row-delete-".$row{'id'}."\"><a href='index.php?page=cat&catid=".$catid."&pg=".$cur_page."&delete=".$row{'id'}."' class='delete'>&times;</a></div>
                             </td>
                             <td><input type='checkbox' class='check-row' id='check-" . $row{'id'} . "'></td>
                             <td><button type=\"button\" class=\"btn btn-".$row{'id'}." btn-modal\" data-toggle=\"modal\" data-target=\"edit_modal\" data-rowid=\"".addslashes($row{'id'})."\"><i class=\"fa fa-edit\"</button> </td>
@@ -155,7 +148,7 @@ $catname = $db->getOne("SELECT name FROM cat WHERE id=$catid")
         </table>
     </form>
     <div class="pagination-wrap">
-        <p class="small">В данной категории всего сертификатов: <?=$rows?> </p>
+        <p class="small">В данной категории всего сертификатов: <span id="totalRows"><?=$rows?></span></p>
         <br/>
         <nav>
             <ul class="pagination">
@@ -206,19 +199,42 @@ $catname = $db->getOne("SELECT name FROM cat WHERE id=$catid")
         });
     </script>
 
-    <?php
-        del_row();
-    ?>
+    <script>
+        $('a.delete').click(function(e) {
+            e.preventDefault();
+            var parent = $(this).parent();
+            var rowid = parent.attr('id').replace('row-delete-','');
+            var row = $('#row-' + rowid);
+            $.ajax({
+                type: 'GET',
+                url: '../pages/do-delete.php',
+                data: 'ajax=1&catid='+$(".cat_id").attr('id')+'&delete=' + parent.attr('id').replace('row-delete-',''),
+                dataType: "json",
+                cache: false,
+                beforeSend: function() {
+                   row.animate({'backgroundColor':'#fb6c6c'},300);
+                },
+                success: function (data) {
 
+                    //this gets executed when ajax succeeds
+                    $("#queryRes").html(data.data1);
+                    alertTimeout(3000);
+                    $("#totalRows").html(data.data2);
+                    row.slideUp(300,function(){row.remove();});
+                }
+            });
+            //return false;
+        });
+    </script>
 
     <!-- modal trigger script -->
     <script>
         $('#edit_modal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget) // Button that triggered the modal
-            var rowid = button.data('rowid') // Extract info from data-* attributes
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var rowid = button.data('rowid'); // Extract info from data-* attributes
 
-            var modal = $(this)
-            modal.find('.modal-title').text('Редактирование записи ' + rowid)
+            var modal = $(this);
+            modal.find('.modal-title').text('Редактирование записи ' + rowid);
             //modal.find('.').val(rowid)
         })
     </script>

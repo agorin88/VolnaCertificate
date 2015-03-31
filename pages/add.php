@@ -4,29 +4,46 @@
     --------------
     Final version: 26.03.2015
 -->
+<!-- Modal -->
+<div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div> <!-- /.modal-content -->
+    </div> <!-- /.modal-dialog -->
+</div> <!-- /.modal -->
+<!-- Modal -->
+<div class="modal fade" id="ManModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
 
-<div id="queryRes"></div>
+        <div class="modal-content">
+        </div> <!-- /.modal-content -->
+
+    </div> <!-- /.modal-dialog -->
+</div> <!-- /.modal -->
+
 <div class="form-add col-md-5 fnone">
     <form id="cert-add" method="post">
-        <div class="form-group">
-            <label for="inputCat">Категория</label>
+        <label for="inputCat">Категория</label>
+        <div class="form-group form-inline">
             <select class="form-control" id="inputCat" name="cat_id">
                 <?php
-                while ($row = mysql_fetch_array($result_cat2)) {
-                    echo "<option value=\"".$row{'id'}."\">".$row{'name'}."</option>";
-                }
+                foreach ($result_cat as $row):
+                   echo "<option value=\"".$row{'id'}."\">".$row{'name'}."</option>";
+                endforeach
                 ?>
             </select>
+            <a data-toggle="modal" class="btn btn-info" href="pages/addcat.php" data-target="#AddModal">+</a>
         </div>
-        <div class="form-group">
-            <label for="inputMan">Производитель</label>
+        <label for="inputMan">Производитель</label>
+        <div class="form-group form-inline">
             <select class="form-control" id="inputMan" name="man_id">
                 <?php
-                while ($row = mysql_fetch_array($result_man)) {
+                foreach ($result_man as $row):
                     echo "<option value=\"".$row{'id'}."\">".$row{'name'}."</option>";
-                }
+                endforeach
                 ?>
             </select>
+            <a data-toggle="modal" class="btn btn-info" href="pages/addman.php" data-target="#ManModal">+</a>
         </div>
         <div class="form-group">
             <label for="inputName">Наименование</label>
@@ -97,12 +114,5 @@
         return false;
     });
 
-    function alertTimeout(wait){
-        setTimeout(function(){
-            $('#queryRes').children('.alert:first-child').fadeOut(1000);
-        }, wait);
-    }
-    function alertRemove(){
-        $('#queryRes').children('.alert:first-child').remove();
-    }
+
 </script>

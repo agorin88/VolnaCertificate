@@ -7,5 +7,9 @@ $hostname = "localhost";
 $host = "localhost";
 $database = "cert";
 //DB Query parameters
-$item_per_page = "50";
+$per_page = 10;
+//db table names
+$certificate = "certificate";
+$cat = "cat";
+$man = "man";
 ?>

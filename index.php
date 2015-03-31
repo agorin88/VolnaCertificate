@@ -6,48 +6,48 @@ if (!isset($_GET['page'])) {
 }
 ?>
 <?php session_start(); ?>
+<?php
+//cookie css switcher goes here
+$default = 'default.css'; // define stylesheets
+$darkcss = 'dark.css';
+$lightcss = 'light.css';
+
+$expire = time() + 60 * 60 * 24 * 30; // how long to remember css choice (60*60*24*30 = 30 days)
+
+if ((isset($_GET['css'])) && ($_GET['css'] == $lightcss)) { // set cookie for light css
+    $_SESSION['css'] = $_GET['css'];
+    setcookie('css', $_GET['css'], $expire);
+}
+
+if ((isset($_GET['css'])) && ($_GET['css'] == $darkcss)) { // set cookie for dark css
+    $_SESSION['css'] = $_GET['css'];
+    setcookie('css', $_GET['css'], $expire);
+}
+
+if ((isset($_GET['css'])) && ($_GET['css'] == $default)) { // set cookie for default css
+    $_SESSION['css'] = $_GET['css'];
+    setcookie('css', $_GET['css'], $expire);
+}
+
+if (isset($_COOKIE['css'])) { // check for css stored in cookie
+    $savedcss = $_COOKIE['css'];
+} else {
+    $savedcss = $default;
+}
+
+if ($_SESSION['css']) { // use session css else use cookie css
+    $css = $_SESSION['css'];
+} else {
+    $css = $savedcss;
+}
+// the filename of the stylesheet is now stored in $css
+echo '<link rel="stylesheet" href="/css/' . $css . '">';
+?>
 <!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
-    <?php
-    //cookie css switcher goes here
-    $default = 'default.css'; // define stylesheets
-    $darkcss = 'dark.css';
-    $lightcss = 'light.css';
-
-    $expire = time() + 60 * 60 * 24 * 30; // how long to remember css choice (60*60*24*30 = 30 days)
-
-    if ((isset($_GET['css'])) && ($_GET['css'] == $lightcss)) { // set cookie for light css
-        $_SESSION['css'] = $_GET['css'];
-        setcookie('css', $_GET['css'], $expire);
-    }
-
-    if ((isset($_GET['css'])) && ($_GET['css'] == $darkcss)) { // set cookie for dark css
-        $_SESSION['css'] = $_GET['css'];
-        setcookie('css', $_GET['css'], $expire);
-    }
-
-    if ((isset($_GET['css'])) && ($_GET['css'] == $default)) { // set cookie for default css
-        $_SESSION['css'] = $_GET['css'];
-        setcookie('css', $_GET['css'], $expire);
-    }
-
-    if (isset($_COOKIE['css'])) { // check for css stored in cookie
-        $savedcss = $_COOKIE['css'];
-    } else {
-        $savedcss = $default;
-    }
-
-    if ($_SESSION['css']) { // use session css else use cookie css
-        $css = $_SESSION['css'];
-    } else {
-        $css = $savedcss;
-    }
-    // the filename of the stylesheet is now stored in $css
-    echo '<link rel="stylesheet" href="/css/' . $css . '">';
-    ?>
     <script src="js/jquery-2.1.3.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <!--<link href="css/bootstrap.css" rel="stylesheet"> switch off for cookie css switcher-->
@@ -65,6 +65,7 @@ include('core.php');
 include ('core/nav.php');
 ?>
 <div class="center-block fnone content">
+    <div id="queryRes"></div>
     <?php
     include('pages/' . $page . '.php');
     ?>
@@ -77,6 +78,7 @@ include ('core/nav.php');
 <!-- "go back" script -->
 <script src="js/back.js"></script>
 <script src="js/pagination.js"></script>
+<script src="js/alert.js"></script>
 <!-- simple search script -->
 <script src="js/search.js"></script>
 

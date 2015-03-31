@@ -107,7 +107,7 @@ body {
 .alert-add {
     width: 350px;
     /* margin: 10px 0 0 10%; */
-    position: absolute;
+    position: fixed;
     top: 80px;
     left: 37%;
     z-index: 99999;
@@ -205,3 +205,15 @@ body {
 }
 
 .pagination > .disabled > span, .pagination > .disabled > span:hover, .pagination > .disabled > span:focus, .pagination > .disabled > a, .pagination > .disabled > a:hover, .pagination > .disabled > a:focus {cursor: default !important;}
+
+.well-list {
+    max-height:250px;
+    overflow: auto;
+    margin: 0 auto 10px;
+    float: none;
+}
+
+.well-list ul>li {
+    margin:-5px 0 0 -60px;
+
+}

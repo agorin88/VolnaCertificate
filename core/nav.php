@@ -21,14 +21,14 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Категории <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <?php
-                        while ($row = mysql_fetch_array($result_cat)) {
+                        foreach ($result_cat as $row):
                             if ($row{'fa_style'} == '')
                                 $fa_stl = "fa-folder";
                             else
                                 $fa_stl = $row{'fa_style'};
 
                             echo "<li><a href=\"index.php?page=cat&catid=" . $row{'id'} . "\"><i class=\"fa " . $fa_stl . "\"></i> " . $row{'name'} . "</a></li>";
-                        }
+                        endforeach
                         ?>
                     </ul>
                 </li>
