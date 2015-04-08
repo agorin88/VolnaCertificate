@@ -23,6 +23,7 @@ LIMIT $page_position, $item_per_page";
 
 //Запрос просроченных сертификатов
 $o_date = date('Y\-m\-d');
+$zero = '0000-00-00';
 $out_query = "SELECT
 `certificate`.`id` ,
 `certificate`.`name` ,
@@ -32,12 +33,11 @@ $out_query = "SELECT
 `certificate`.`cert_center` ,
 `certificate`.`photo_url` AS 'link' ,
 `man`.`name` AS  'manname'
-FROM certificate
-LEFT JOIN man ON man.id = certificate.man_id
-WHERE date_end < '$o_date' && date_end != '0000-00-00'
-ORDER BY  `certificate`.`id` ASC
-LIMIT $page_position, $item_per_page";
-$outdate = mysql_query("$out_query");
+FROM ?n
+LEFT JOIN ?n ON man.id = certificate.man_id
+WHERE date_end < ?s && date_end != ?s
+ORDER BY  `certificate`.`id` ASC";
+$outdate = $db->getAll($out_query, $certificate, $man, $o_date, $zero);
 
 //Запрос к таблице категорий.
 $catquery = "SELECT * FROM ?n";

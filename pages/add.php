@@ -20,8 +20,13 @@
 
     </div> <!-- /.modal-dialog -->
 </div> <!-- /.modal -->
-
-<div class="form-add col-md-5 fnone">
+<div class="col-sm-4 col-xs-10 graph pull-right">
+    <h4>Добавлений по дням:</h4>
+    <div class="graph-well">
+        <canvas id="graph1" height="200" width="300"></canvas>
+    </div>
+</div>
+<div class="form-add col-sm-5 col-xs-10 pull-left">
     <form id="cert-add" method="post">
         <label for="inputCat">Категория</label>
         <div class="form-group form-inline">
@@ -53,12 +58,17 @@
             <label for="inputNumber">Номер сертификата</label>
             <input class="form-control" type="text" id="inputNumber" name="cert_number" placeholder="Введите номер сертификата">
         </div>
-        <div class="form-group form-inline formDate">
-            <label for="inputDateStart" class="labelDate">Дата регистрации</label>
-            <input class="form-control inputDate" type="date" name="date_start" id="inputDateStart">
 
-            <label for="inputDateEnd" class="labelDate">Действителен до</label>
-            <input class="form-control inputDate" type="date" name="date_end" id="inputDateEnd">
+
+        <div class="form-group form-inline formDate">
+            <div class="form-group">
+                <label for="inputDateStart" class="labelDate">Дата регистрации</label>
+                <input class="form-control inputDate" type="date" name="date_start" id="inputDateStart">
+            </div>
+            <div class="form-group">
+                <label for="inputDateEnd" class="labelDate" style="display: block">Действителен до</label>
+                <input class="form-control inputDate" type="date" name="date_end" id="inputDateEnd">
+            </div>
         </div>
         <div class="form-group">
             <label for="inputCertCenter">Кем выдан</label>
@@ -71,6 +81,8 @@
         <button type="reset" class="btn btn-info hvr-fade hvr-shadow"><i class="fa fa-eraser"></i> Сбросить</button> <button type="submit" name="submit" id="btn-submit" class="btn btn-success hvr-shadow hvr-fade"><i class="fa fa-plus-circle"></i> Добавить</button>
     </form>
 </div>
+
+
 
 <?php
 //add_cert();
@@ -109,10 +121,39 @@
                 $('#inputDateEnd').val("");
                 $('#inputCertCenter').val("");
                 $('#inputUrl').val("");
+                graphDraw();
             }
         });
         return false;
     });
+</script>
 
+<!-- graph JS -->
+<script>
+    $(document).ready(function () {
+        graphDraw();
+    });
+    function graphDraw() {
+        $.getJSON("pages/graph-added.php", function (result) {
+            var BarChartData = {
+                labels : result[0],
+                datasets: [
+                    {
+                        fillColor : "rgba(127,127,127,0.5)",
+                        strokeColor : "rgba(0,0,0,0.3)",
+                        highlightFill: "rgba(127,127,127,0.75)",
+                        highlightStroke: "rgba(0,0,0,0.5)",
+                        data : result[1]
+                    }
+                ]};
+            var ctx = document.getElementById("graph1").getContext("2d");
+            window.myBar = new Chart(ctx).Bar(BarChartData, {
+                responsive : true,
+                barStrokeWidth : 1,
+                scaleShowGridLines : false,
+                scaleGridLineColor : "rgba(0,0,0,1)"
+            });
+        });
+    }
 
 </script>

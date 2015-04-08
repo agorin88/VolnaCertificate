@@ -8,9 +8,10 @@ if (!isset($_GET['page'])) {
 <?php session_start(); ?>
 <?php
 //cookie css switcher goes here
-$default = 'default.css'; // define stylesheets
-$darkcss = 'dark.css';
-$lightcss = 'light.css';
+$default = 'default'; // define stylesheets
+$darkcss = 'dark';
+$lightcss = 'light';
+$paper = 'paper';
 
 $expire = time() + 60 * 60 * 24 * 30; // how long to remember css choice (60*60*24*30 = 30 days)
 
@@ -20,6 +21,11 @@ if ((isset($_GET['css'])) && ($_GET['css'] == $lightcss)) { // set cookie for li
 }
 
 if ((isset($_GET['css'])) && ($_GET['css'] == $darkcss)) { // set cookie for dark css
+    $_SESSION['css'] = $_GET['css'];
+    setcookie('css', $_GET['css'], $expire);
+}
+
+if ((isset($_GET['css'])) && ($_GET['css'] == $paper)) { // set cookie for dark css
     $_SESSION['css'] = $_GET['css'];
     setcookie('css', $_GET['css'], $expire);
 }
@@ -41,7 +47,10 @@ if ($_SESSION['css']) { // use session css else use cookie css
     $css = $savedcss;
 }
 // the filename of the stylesheet is now stored in $css
-echo '<link rel="stylesheet" href="/css/' . $css . '">';
+echo '<link rel="stylesheet" href="/css/'.$css.'/bootstrap.css">';
+echo '<link rel="stylesheet" href="/css/'.$css.'/theme.css">';
+echo '<link rel="stylesheet" href="/css/'.$css.'/style.css">';
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -50,11 +59,13 @@ echo '<link rel="stylesheet" href="/css/' . $css . '">';
     <meta charset="utf-8">
     <script src="js/jquery-2.1.3.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/chart.js"></script>
     <!--<link href="css/bootstrap.css" rel="stylesheet"> switch off for cookie css switcher-->
     <link href="css/normalize.css" rel="stylesheet">
     <link href="css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/hover-min.css"/>
-    <link href="css/style.css" rel="stylesheet">
+    <link href="css/common.css" rel="stylesheet"/>
+    <!--<link href="css/style.css" rel="stylesheet">-->
     <title>Certificate</title>
     <meta name="generator" content="Bootply"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">

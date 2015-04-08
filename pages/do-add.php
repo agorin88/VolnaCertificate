@@ -11,10 +11,11 @@ include ('../core.php');
     $date_end = mysql_real_escape_string($_POST['date_end']);
     $cert_center = mysql_real_escape_string($_POST['cert_center']);
     $photo_url = mysql_real_escape_string($_POST['photo_url']);
+    $added = date('Y\-m\-d');
 
     $data = array('cat_id'=>$cat_id, 'man_id'=>$man_id, 'cert_name'=>$cert_name, 'cert_number'=>$cert_number, 'date_start'=>$date_start, 'date_end'=>$date_end, 'cert_center'=>$cert_center, 'photo_url'=>$photo_url);
-    $sql = "INSERT INTO ?n SET cat_id = ?s, man_id = ?s, name = ?s, number = ?s, date_start = ?s, date_end = ?s, cert_center = ?s, photo_url = ?s";
-    if (!$db->query($sql, $table, $cat_id, $man_id, $cert_name, $cert_number, $date_start, $date_end, $cert_center, $photo_url))
+    $sql = "INSERT INTO ?n SET cat_id = ?s, man_id = ?s, name = ?s, number = ?s, date_start = ?s, date_end = ?s, cert_center = ?s, photo_url = ?s, added = ?s";
+    if (!$db->query($sql, $table, $cat_id, $man_id, $cert_name, $cert_number, $date_start, $date_end, $cert_center, $photo_url, $added))
         print_r("<div class=\"alert alert-add alert-danger\"><a href=\"#\" class=\"close\" data-dismiss=\"alert\">&times;</a><strong>Ошибка!</strong> Что-то пошло не так.</div>");
     else {
         print_r("<div class=\"alert alert-add alert-success\">

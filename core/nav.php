@@ -47,6 +47,7 @@
                         <li><a href="?css=<?php echo $lightcss;?>">Light</a></li>
                         <li><a href="?css=<?php echo $darkcss;?>">Dark</a></li>
                         <li><a href="?css=<?php echo $default;?>">Default</a></li>
+                        <li><a href="?css=<?php echo $paper;?>">Paper</a></li>
                     </ul>
                 </li>
             </ul>
@@ -57,7 +58,7 @@
 
                         <div class="input-group-btn">
                             <button class="btn btn-default search_button" type="submit"><i
-                                    class="glyphicon glyphicon-search"></i></button>
+                                    class="fa fa-search"></i></button>
                         </div>
                     </div>
                 </form>

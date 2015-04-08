@@ -125,11 +125,11 @@ $catname = $db->getOne("SELECT name FROM ?n WHERE id=?i", $cat, $catid);
                 if ($row{'link'} == '')
                     $link = "<td><i class=\"fa fa-close\"></i> Изображение отсутствует</td>";
                 else
-                    $link = "<td><a href=\"" . $row{'link'} . "\" target=\"_blank\"><i class=\"fa fa-file\"></i> Посмотреть сертификат</a></td>";
+                    $link = "<td><a class='link-to-cert' href=\"" . $row{'link'} . "\" target=\"_blank\"><i class=\"fa fa-file\"></i> Посмотреть сертификат</a></td>";
                 echo "
                       <tr id='row-".$row{'id'}."'>
                             <td>
-                                <div class='row-delete' id=\"row-delete-".$row{'id'}."\"><a href='index.php?page=cat&catid=".$catid."&pg=".$cur_page."&delete=".$row{'id'}."' class='delete'>&times;</a></div>
+                                <div class='row-delete' id=\"row-delete-".$row{'id'}."\"><a href='index.php?page=cat&catid=".$catid."&pg=".$cur_page."&delete=".$row{'id'}."' class='delete link-to-cert'>&times;</a></div>
                             </td>
                             <td><input type='checkbox' class='check-row' id='check-" . $row{'id'} . "'></td>
                             <td><button type=\"button\" class=\"btn btn-".$row{'id'}." btn-modal\" data-toggle=\"modal\" data-target=\"edit_modal\" data-rowid=\"".addslashes($row{'id'})."\"><i class=\"fa fa-edit\"</button> </td>
@@ -212,7 +212,8 @@ $catname = $db->getOne("SELECT name FROM ?n WHERE id=?i", $cat, $catid);
                 dataType: "json",
                 cache: false,
                 beforeSend: function() {
-                   row.animate({'backgroundColor':'#fb6c6c'},300);
+                    //row.animate({'backgroundColor':'#fb6c6c'},300);
+                    row.addClass('warning')
                 },
                 success: function (data) {
 
@@ -220,6 +221,7 @@ $catname = $db->getOne("SELECT name FROM ?n WHERE id=?i", $cat, $catid);
                     $("#queryRes").html(data.data1);
                     alertTimeout(3000);
                     $("#totalRows").html(data.data2);
+                    row.addClass('danger');
                     row.slideUp(300,function(){row.remove();});
                 }
             });

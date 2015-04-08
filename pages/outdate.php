@@ -78,7 +78,7 @@
             <tbody id="results" class="update">
             <?php
             $c_date = date('Y\-m\-d');
-            while ($row = mysql_fetch_array($outdate)) {
+            foreach ($outdate as $row):
                 if ($row{'date_end'} == '0000-00-00')
                     $date_end = 'Бессрочно';
                 else
@@ -89,14 +89,11 @@
                 if ($row{'link'} == '')
                     $link = "<td><i class=\"fa fa-close\"></i> Изображение отсутствует</td>";
                 else
-                    $link = "<td><a href=\"" . $row{'link'} . "\" target=\"_blank\"><i class=\"fa fa-file\"></i> Посмотреть сертификат</a></td>";
+                    $link = "<td><a class='link-to-cert' href=\"" . $row{'link'} . "\" target=\"_blank\"><i class=\"fa fa-file\"></i> Посмотреть сертификат</a></td>";
                 echo "
-                      <tr>
+                      <tr id='row-".$row{'id'}."'>
                             <td>
-                                <form method='post'>
-                                    <input type=\"hidden\" name=\"del_row_id\" value=\"".$row{'id'}." \"/>
-                                    <button type=\"submit\" name=\"del_row\" class='btn btn-round2 btn-sm btn-danger'>&times;</button>
-                                </form>
+                                <div class='row-delete' id=\"row-delete-".$row{'id'}."\"><a href='index.php?page=outdate&delete=".$row{'id'}."' class='delete link-to-cert'>&times;</a></div>
                             </td>
                             <td><input type='checkbox' class='check-row' id='check-" . $row{'id'} . "'></td>
                             <td><button type=\"button\" class=\"btn btn-".$row{'id'}." btn-modal\" data-toggle=\"modal\" data-target=\"edit_modal\" data-rowid=\"".addslashes($row{'id'})."\"><i class=\"fa fa-edit\"</button> </td>
@@ -110,11 +107,12 @@
                     . $link .
                     "</tr>
                       ";
-            }
+            endforeach
             ?>
             </tbody>
         </table>
     </form>
+    </div>
     <script>
         $('#check-all').hover(function() {
             if ($(this).is(':checked')) {
@@ -138,9 +136,35 @@
         });
     </script>
 
-    <?php
-    del_row();
-    ?>
+    <script>
+        $('a.delete').click(function(e) {
+            e.preventDefault();
+            var parent = $(this).parent();
+            var rowid = parent.attr('id').replace('row-delete-','');
+            var row = $('#row-' + rowid);
+            $.ajax({
+                type: 'GET',
+                url: '../pages/do-delete.php',
+                data: 'ajax=1&delete=' + parent.attr('id').replace('row-delete-',''),
+                dataType: "json",
+                cache: false,
+                beforeSend: function() {
+                    //row.animate({'backgroundColor':'#fb6c6c'},300);
+                    row.addClass('warning')
+                },
+                success: function (data) {
+
+                    //this gets executed when ajax succeeds
+                    $("#queryRes").html(data.data1);
+                    alertTimeout(3000);
+                    $("#totalRows").html(data.data2);
+                    row.addClass('danger');
+                    row.slideUp(300,function(){row.remove();});
+                }
+            });
+            //return false;
+        });
+    </script>
 
 
 

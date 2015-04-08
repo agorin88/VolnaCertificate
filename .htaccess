@@ -1,4 +1,16 @@
-AddDefaultCharset Off
+AddDefaultCharset utf-8
+# Если mod_charset есть на сервере
+<IfModule mod_charset.c>
+# Отключаем перекодировку
+    CharsetDisable On
+# Кодировка, в которой документы хранятся на диске
+    CharsetSourceEnc utf-8
+# Кодировка по-умолчанию для данного сервера
+    CharsetDefault utf-8
+</IfModule>
+
 <IfModule dir_module>
     DirectoryIndex index.php
 </IfModule>
+# Позволяем следовать символическим ссылкам
+Options +FollowSymLinks
