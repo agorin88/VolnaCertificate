@@ -122,6 +122,7 @@
                 $('#inputCertCenter').val("");
                 $('#inputUrl').val("");
                 graphDraw();
+                myBar.update();
             }
         });
         return false;

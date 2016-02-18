@@ -185,6 +185,6 @@ body {
     padding: 10px 15px 10px 15px;
 }
 .graph-well>canvas {
-
+margin-left:-20px;
 
 }
